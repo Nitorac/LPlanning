@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -15,10 +17,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -28,12 +33,15 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nitorac.lplanning.colorpicker.ColorPicker;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,7 +52,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class SettingsActivity extends ListActivity {
+public class SettingsActivity extends ActionBarActivity {
 
     ProgressBar pb;
     Dialog dialog;
@@ -56,6 +64,8 @@ public class SettingsActivity extends ListActivity {
     final File file = new File(SDCardRoot,"LPlanning.apk");
 
     private static final String APP_SHARED_PREFS = "Lplanning";
+    private static final String APP_SHARED_PREFS_COLOR = "LplanningColor";
+
     private SharedPreferences.Editor editor;
 
     private static final List<Map<String,String>> items =
@@ -72,6 +82,10 @@ public class SettingsActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        android.support.v7.app.ActionBar ab =  getSupportActionBar();
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(getSavedActionBarColor()));
+        ab.setBackgroundDrawable(colorDrawable);
+
         String credits = getString(R.string.credits);
         String app_name = getString(R.string.app_name);
         String version = MainActivity.APP_VERSION;
@@ -85,6 +99,13 @@ public class SettingsActivity extends ListActivity {
         String checkUpdatesTxt = getString(R.string.checkUpdatesTxt);
         String currentVerTxt = getString(R.string.currentVerTxt);
         String cooMobileTxt = getString(R.string.cooMobile);
+        String changeColorActionBarTxt = getString(R.string.changeColorTxt);
+        String currentColor = getString(R.string.currentColor);
+        String changeColorBackgroundTxt = getString(R.string.changeColorBackgroundTxt);
+        String changeColorTextSalleTxt = getString(R.string.changeColorTextSalleTxt);
+        String resetColor = getString(R.string.resetColorTxt);
+        String resetColorSub = getString(R.string.resetColorTxtSub);
+        String changeColorTextMatiereTxt = getString(R.string.changeColorMatiereSalleTxt);
 
         String allemand = "allemande";
         String espagnol = "espagnol";
@@ -99,12 +120,32 @@ public class SettingsActivity extends ListActivity {
         Map<String, String> map;
         items.clear();
         map = new HashMap<>();
+        map.put("line1", changeColorTextSalleTxt);
+        map.put("line2", currentColor + " " + getSavedTextSalleColor());
+        items.add(map);
+        map = new HashMap<>();
+        map.put("line1", changeColorTextMatiereTxt);
+        map.put("line2", currentColor + " " + getSavedTextMatiereColor());
+        items.add(map);
+        map = new HashMap<>();
+        map.put("line1", changeColorBackgroundTxt);
+        map.put("line2", currentColor + " " + getSavedBackgroundColor());
+        items.add(map);
+        map = new HashMap<>();
+        map.put("line1", changeColorActionBarTxt);
+        map.put("line2", currentColor + " " + getSavedActionBarColor());
+        items.add(map);
+        map = new HashMap<>();
         map.put("line1", cooMobileTxt);
         map.put("line2", mobileCoo);
         items.add(map);
         map = new HashMap<>();
         map.put("line1", checkUpdatesTxt);
         map.put("line2", currentVerTxt + " v" + version);
+        items.add(map);
+        map = new HashMap<>();
+        map.put("line1", resetColor);
+        map.put("line2", resetColorSub);
         items.add(map);
         map = new HashMap<>();
         map.put("line1", reset);
@@ -126,9 +167,93 @@ public class SettingsActivity extends ListActivity {
                 android.R.layout.simple_list_item_2,
                 keys,
                 controlIds );
-        setListAdapter(adapter);
+        ListView listView = (ListView) findViewById(R.id.listViewSettings);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                if(position == 0){
+                    handlerPickerTextSalle.sendEmptyMessage(1);
+                }
+                else if(position == 1){
+                    handlerPickerTextMatiere.sendEmptyMessage(1);
+                }
+                else if(position == 2){
+                    handlerPickerBackground.sendEmptyMessage(1);
+                }
+                else if(position == 3){
+                    handlerPicker.sendEmptyMessage(1);
+                }
+                else if(position == 4){
+                    mobileSpinner();
+                }
+                else if(position == 5){
+                    manuallyUpdates();
+                }
+                else if(position == 6){
+                    SettingsActivity.this.getSharedPreferences("LplanningColor", 0).edit().clear().commit();
+                    Intent i = new Intent(SettingsActivity.this, MainActivity.class);
+                    finish();
+                    startActivity(i);
+                }
+                else if(position == 7){
+                    SettingsActivity.this.getSharedPreferences("Lplanning", 0).edit().clear().commit();
+                    Intent i = new Intent(SettingsActivity.this, MainActivity.class);
+                    finish();
+                    startActivity(i);
+                }
+            }
+        });
+}
+
+    public String getSavedActionBarColor(){
+        SharedPreferences color = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
+        editor = color.edit();
+        if(color.getString("actionBarColor", "#428AC9").equals("#428AC9")){
+            editor.putString("actionBarColor", "#428AC9");
+            editor.commit();
+            return "#428AC9";
+        }else{
+            return color.getString("actionBarColor", "#428AC9");
+        }
     }
 
+    public String getSavedBackgroundColor(){
+        SharedPreferences color = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
+        editor = color.edit();
+        if(color.getString("backgroundColor", "#E6E6E6").equals("#E6E6E6")){
+            editor.putString("backgroundColor", "#E6E6E6");
+            editor.commit();
+            return "#E6E6E6";
+        }else{
+            return color.getString("backgroundColor", "#E6E6E6");
+        }
+    }
+
+    public String getSavedTextSalleColor(){
+        SharedPreferences color = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
+        editor = color.edit();
+        if(color.getString("textSalleColor", "#3443EB").equals("#3443EB")){
+            editor.putString("textSalleColor", "#3443EB");
+            editor.commit();
+            return "#3443EB";
+        }else{
+            return color.getString("textSalleColor", "#3443EB");
+        }
+    }
+
+    public String getSavedTextMatiereColor(){
+        SharedPreferences color = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
+        editor = color.edit();
+        if(color.getString("textMatiereColor", "#2c2d36").equals("#2c2d36")){
+            editor.putString("textMatiereColor", "#2c2d36");
+            editor.commit();
+            return "#2c2d36";
+        }else{
+            return color.getString("textMatiereColor", "#2c2d36");
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -205,6 +330,71 @@ public class SettingsActivity extends ListActivity {
         }
     };
 
+    public void colorDialog(final String prefKey, String hexInput){
+        final Dialog dialog = new Dialog(SettingsActivity.this);
+        dialog.getWindow().requestFeature(Window.FEATURE_LEFT_ICON);
+        dialog.setContentView(R.layout.color_picker);
+        dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,R.mipmap.ic_launcher);
+        dialog.setTitle("Choisissez la couleur");
+        dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,R.mipmap.ic_launcher);
+
+        final ColorPicker colorPicker = (ColorPicker) dialog.findViewById(R.id.colorPicker);
+        int setupColor = Color.parseColor(hexInput);
+        colorPicker.setColor(setupColor);
+        Button validBtn = (Button) dialog.findViewById(R.id.validBtn);
+        validBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences colorPick = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
+                editor = colorPick.edit();
+                int color = colorPicker.getColor();
+                String hex = String.format("#%02x%02x%02x", Color.red(color), Color.green(color), Color.blue(color));
+                editor.putString(prefKey, hex);
+                editor.commit();
+                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        });
+        Button cancelBtn = (Button) dialog.findViewById(R.id.cancelBtn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    final Handler handlerPicker = new Handler() {
+        @Override
+        public void handleMessage(final Message msg) {
+            colorDialog("actionBarColor", getSavedActionBarColor());
+        }
+    };
+
+    final Handler handlerPickerBackground = new Handler() {
+        @Override
+        public void handleMessage(final Message msg) {
+            colorDialog("backgroundColor", getSavedBackgroundColor());
+        }
+    };
+
+    final Handler handlerPickerTextSalle = new Handler() {
+        @Override
+        public void handleMessage(final Message msg) {
+            colorDialog("textSalleColor", getSavedTextSalleColor());
+        }
+    };
+
+    final Handler handlerPickerTextMatiere = new Handler() {
+        @Override
+        public void handleMessage(final Message msg) {
+            colorDialog("textMatiereColor", getSavedTextMatiereColor());
+        }
+    };
+
     final Handler handlerNoUp = new Handler() {
         @Override
         public void handleMessage(final Message msg) {
@@ -223,6 +413,13 @@ public class SettingsActivity extends ListActivity {
         }
     };
 
+    @Override
+    public void onBackPressed(){
+            super.onBackPressed();
+            Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+            finish();
+            startActivity(intent);
+    }
 
     public void manuallyUpdates(){
         if (haveNetworkConnection(getMobileActivated())) {
@@ -257,7 +454,7 @@ public class SettingsActivity extends ListActivity {
         final AlertDialog.Builder builderSingle = new AlertDialog.Builder(SettingsActivity.this);
         builderSingle.setIcon(R.mipmap.ic_launcher);
         builderSingle.setTitle(getString(R.string.cooMobile));
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 SettingsActivity.this,
                 android.R.layout.select_dialog_singlechoice);
         arrayAdapter.add(getString(R.string.mobileCooActived));
@@ -281,6 +478,7 @@ public class SettingsActivity extends ListActivity {
                                 editor.putString("mobile", "oui");
                                 editor.commit();
                                 Intent intent = new Intent (SettingsActivity.this, MainActivity.class);
+                                finish();
                                 startActivity(intent);
                             }
                         } else if (which == 1) {
@@ -290,29 +488,13 @@ public class SettingsActivity extends ListActivity {
                                 editor.putString("mobile", "non");
                                 editor.commit();
                                 Intent intent = new Intent (SettingsActivity.this, MainActivity.class);
+                                finish();
                                 startActivity(intent);
                             }
                         }
                     }
                 });
         builderSingle.show();
-    }
-
-    @Override
-    public void onListItemClick (ListView l, View v, int position, long id) {
-        if(position == 0){
-            mobileSpinner();
-        }
-        else if(position == 1){
-            manuallyUpdates();
-        }
-        else if(position == 2){
-            this.getSharedPreferences("Lplanning", 0).edit().clear().commit();
-
-            Intent i = new Intent(this, MainActivity.class);
-            finish();
-            startActivity(i);
-        }
     }
 
 
@@ -413,5 +595,4 @@ public class SettingsActivity extends ListActivity {
         pb.setProgress(0);
         pb.setProgressDrawable(getResources().getDrawable(R.drawable.green_progr_bar));
     }
-
 }

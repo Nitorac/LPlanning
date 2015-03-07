@@ -1,5 +1,6 @@
 package com.nitorac.lplanning;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -23,7 +26,9 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
     static String dwnload_file_path = "http://nitorac.bugs3.com/LPlanning.apk";
 
     private static final String APP_SHARED_PREFS = "Lplanning";
+    private static final String APP_SHARED_PREFS_COLOR = "LplanningColor";
     private SharedPreferences.Editor editor;
 
     final File SDCardRoot = Environment.getExternalStorageDirectory();
@@ -59,12 +65,21 @@ public class MainActivity extends ActionBarActivity {
     public int hourSlotBack = PlanningVar.currentSlotHour();
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        android.support.v7.app.ActionBar ab =  getSupportActionBar();
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(getSavedActionBarColor()));
+        ab.setBackgroundDrawable(colorDrawable);
+
+        RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.relativeLayout);
+        ColorDrawable colorDrawableBg = new ColorDrawable(Color.parseColor(getSavedBackgroundColor()));
+        bgElement.setBackgroundDrawable(colorDrawableBg);
+
         APP_VERSION = getString(R.string.versionName);
         thisActivity = this;
-        Log.i("REZA", String.valueOf(hourSlotBack));
         if(file.exists()){
               file.delete();
         }
@@ -92,6 +107,48 @@ public class MainActivity extends ActionBarActivity {
             Intent intent = getIntent();
             finish();
             startActivity(intent);
+    }
+
+    public void settingsClick(MenuItem mi){
+        Intent intent = new Intent(this, SettingsActivity.class);
+        finish();
+        startActivity(intent);
+    }
+
+    public String getSavedActionBarColor(){
+        SharedPreferences color = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
+        editor = color.edit();
+        if(color.getString("actionBarColor", "#428AC9").equals("#428AC9")){
+            editor.putString("actionBarColor", "#428AC9");
+            editor.commit();
+            return "#428AC9";
+        }else{
+            return color.getString("actionBarColor", "#428AC9");
+        }
+    }
+
+    public String getSavedBackgroundColor(){
+        SharedPreferences color = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
+        editor = color.edit();
+        if(color.getString("backgroundColor", "#E6E6E6").equals("#E6E6E6")){
+            editor.putString("backgroundColor", "#E6E6E6");
+            editor.commit();
+            return "#E6E6E6";
+        }else{
+            return color.getString("backgroundColor", "#E6E6E6");
+        }
+    }
+
+    public String getSavedTextSalleColor(){
+        SharedPreferences color = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
+        editor = color.edit();
+        if(color.getString("textSalleColor", "#3443EB").equals("#3443EB")){
+            editor.putString("textSalleColor", "#3443EB");
+            editor.commit();
+            return "#3443EB";
+        }else{
+            return color.getString("textSalleColor", "#3443EB");
+        }
     }
 
     final Handler handler = new Handler() {
@@ -174,13 +231,15 @@ public class MainActivity extends ActionBarActivity {
         }
         return isActivated;
     }
-
+    @SuppressWarnings("deprecation")
     public void onCreateStuff() {
         boolean setupOk = quest();
         checkUpdate();
             if (setupOk) {
                 TextView salle = (TextView) findViewById(R.id.salle);
                 TextView matiere = (TextView) findViewById(R.id.matiere);
+                salle.setTextColor(Color.parseColor(getSavedTextSalleColor()));
+                matiere.setTextColor(Color.parseColor(getSavedTextMatiereColor()));
 
                 String all = PlanningVar.getFinalPlanning();
 
@@ -194,6 +253,18 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         }
+
+    public String getSavedTextMatiereColor(){
+        SharedPreferences color = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
+        editor = color.edit();
+        if(color.getString("textMatiereColor", "#2c2d36").equals("#2c2d36")){
+            editor.putString("textMatiereColor", "#2c2d36");
+            editor.commit();
+            return "#2c2d36";
+        }else{
+            return color.getString("textMatiereColor", "#2c2d36");
+        }
+    }
 
     public boolean haveNetworkConnection(boolean mobileActived) {
         boolean haveConnectedWifi = false;
@@ -438,13 +509,13 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     public void settingsActivity(MenuItem mi){
         Intent intent = new Intent(this, SettingsActivity.class);
+        finish();
         startActivity(intent);
 
   /*      showProgress(dwnload_file_path);

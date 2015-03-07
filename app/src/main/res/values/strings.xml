@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">LPlanning</string>
+    <string name="versionName">1.6</string>
     <string name="action_settings">Paramètres</string>
     <string name="next" >Suivant : </string>
     <string name="grClassSpinner">Choisissez le groupe de classe :</string>
@@ -21,7 +22,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="credits">Crédits</string>
-    <string name="versionName">1.5</string>
     <string name="copyRight">Copyright © 2015 - Nitorac</string>
     <string name="reset">Remettre à zéro</string>
     <string name="grClasseSet">Le groupe de classe est le groupe</string>
@@ -29,7 +29,7 @@
     <string name="LV2Set">La langue LV2 est la langue</string>
     <string name="optLatinSet">L\'option latin est</string>
     <string name="optDNLSet">L\'option DNL est</string>
-    <string name="checkUpdatesTxt">Vérifier les mises à jour ...</string>
+    <string name="checkUpdatesTxt">Vérifier les mises à jour …</string>
     <string name="currentVerTxt">La version actuelle est :</string>
     <string name="majTxt">Voulez-vous mettre à jour ?</string>
     <string name="mobileOn">La connexion mobile est activée</string>
@@ -38,5 +38,13 @@
     <string name="mobileCooActived">Activer la connexion mobile</string>
     <string name="mobileCooDesactived">Désactiver la connexion mobile</string>
     <string name="cancel_button">Annuler</string>
-    <string name="alreadyOpt">Vous avez déjà choisi cette option</string>
+    <string name="alreadyOpt">Vous avez déjà choisi cette option </string>
+    <string name="changeColorTxt">Changer la couleur de la\nbarre d\'action</string>
+    <string name="currentColor">La couleur actuelle :</string>
+    <string name="actionBarColor">#FF2929</string>
+    <string name="changeColorBackgroundTxt">Changer la couleur d\'arrière plan</string>
+    <string name="changeColorTextSalleTxt">Changer la couleur de la salle</string>
+    <string name="resetColorTxt">Réinitialiser le thème</string>
+    <string name="resetColorTxtSub">Remettre le thème de base</string>
+    <string name="changeColorMatiereSalleTxt">Changer la couleur de la matière</string>
 </resources>
