@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="greenStart">#009fff</color>
+    <color name="greenMid">#00ff11</color>
+    <color name="greenEnd">#ff0000</color>
+
+</resources>

@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">LPlanning</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="next" >Suivant : </string>
+    <string name="grClassSpinner">Choisissez le groupe de classe :</string>
+    <string name="gr1">Groupe 1</string>
+    <string name="gr2">Groupe 2</string>
+    <string name="lv2Txt">Choisissez votre langue LV2 :</string>
+    <string name="all">Allemand</string>
+    <string name="esp">Espagnol</string>
+    <string name="grAng">Choisissez le groupe d\'anglais :</string>
+    <string name="ang1">Groupe Anglais 1</string>
+    <string name="ang2">Groupe Anglais 2</string>
+    <string name="latinoui">Je fais latin</string>
+    <string name="latinnon">Je ne fais pas latin</string>
+    <string name="latinTxt">Option latin :</string>
+    <string name="DNLTxt">Option DNL :</string>
+    <string name="DNLoui">Je fais DNL</string>
+    <string name="DNLnon">Je ne fais pas DNL</string>
+    <string name="title_activity_settings">Paramètres</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="credits">Crédits</string>
+    <string name="versionName">1.5</string>
+    <string name="copyRight">Copyright © 2015 - Nitorac</string>
+    <string name="reset">Remettre à zéro</string>
+    <string name="grClasseSet">Le groupe de classe est le groupe</string>
+    <string name="grAngSet">Le groupe d\'anglais est le groupe d\'anglais</string>
+    <string name="LV2Set">La langue LV2 est la langue</string>
+    <string name="optLatinSet">L\'option latin est</string>
+    <string name="optDNLSet">L\'option DNL est</string>
+    <string name="checkUpdatesTxt">Vérifier les mises à jour ...</string>
+    <string name="currentVerTxt">La version actuelle est :</string>
+    <string name="majTxt">Voulez-vous mettre à jour ?</string>
+    <string name="mobileOn">La connexion mobile est activée</string>
+    <string name="mobileOff">La connexion mobile est desactivée</string>
+    <string name="cooMobile">Connexion mobile</string>
+    <string name="mobileCooActived">Activer la connexion mobile</string>
+    <string name="mobileCooDesactived">Désactiver la connexion mobile</string>
+    <string name="cancel_button">Annuler</string>
+    <string name="alreadyOpt">Vous avez déjà choisi cette option</string>
+</resources>
