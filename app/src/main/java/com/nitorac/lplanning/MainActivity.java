@@ -1,6 +1,5 @@
 package com.nitorac.lplanning;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,7 +17,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +24,6 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -88,8 +85,8 @@ public class MainActivity extends ActionBarActivity {
                 while(true){
                         if(hourSlotBack != PlanningVar.currentSlotHour()){
                             Intent intent = getIntent();
-                            finish();
                             hourSlotBack = PlanningVar.currentSlotHour();
+                            finish();
                             startActivity(intent);
                         }
                     try {
@@ -101,6 +98,12 @@ public class MainActivity extends ActionBarActivity {
             }
         }).start();
         onCreateStuff();
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        System.exit(0);
     }
 
     public void refreshClick(View v){
@@ -511,20 +514,6 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    public void settingsActivity(MenuItem mi){
-        Intent intent = new Intent(this, SettingsActivity.class);
-        finish();
-        startActivity(intent);
-
-  /*      showProgress(dwnload_file_path);
-
-        new Thread(new Runnable() {
-            public void run() {
-                downloadFile();
-            }
-        }).start();*/
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.nitorac.lplanning;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -41,7 +39,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 public class SettingsActivity extends ActionBarActivity {
