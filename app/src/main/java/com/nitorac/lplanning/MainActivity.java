@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,6 +71,9 @@ public class MainActivity extends ActionBarActivity {
         android.support.v7.app.ActionBar ab =  getSupportActionBar();
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(getSavedActionBarColor()));
         ab.setBackgroundDrawable(colorDrawable);
+        ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+        ab.setIcon(R.mipmap.ic_launcher);
+        ab.setTitle("   " + getString(R.string.app_name));
 
         RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.relativeLayout);
         ColorDrawable colorDrawableBg = new ColorDrawable(Color.parseColor(getSavedBackgroundColor()));
@@ -116,6 +120,11 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, SettingsActivity.class);
         finish();
         startActivity(intent);
+    }
+
+    public void addEvent(MenuItem mi){
+        Toast.makeText(this, "Coucou", Toast.LENGTH_SHORT).show();
+
     }
 
     public String getSavedActionBarColor(){
@@ -244,7 +253,7 @@ public class MainActivity extends ActionBarActivity {
                 salle.setTextColor(Color.parseColor(getSavedTextSalleColor()));
                 matiere.setTextColor(Color.parseColor(getSavedTextMatiereColor()));
 
-                String all = PlanningVar.getFinalPlanning();
+                String all = PlanningVar.getFinalPlanning(false);
 
                 String[] arrayStr = all.split(" ", 2);
                 if (arrayStr[0].equals("0") || arrayStr[1].equals("Pas_de_cours")) {
@@ -254,6 +263,24 @@ public class MainActivity extends ActionBarActivity {
                     matiere.setText(arrayStr[0]);
                     salle.setText(arrayStr[1]);
                 }
+                TextView nextText = (TextView) findViewById(R.id.nextText);
+                TextView nextSalle = (TextView) findViewById(R.id.nextSalle);
+                TextView nextMatiere = (TextView) findViewById(R.id.nextMatiere);
+
+                nextText.setTextColor(Color.parseColor(getSavedTextMatiereColor()));
+                nextSalle.setTextColor(Color.parseColor(getSavedTextSalleColor()));
+                nextMatiere.setTextColor(Color.parseColor(getSavedTextMatiereColor()));
+
+                String allNext = PlanningVar.getFinalPlanning(true);
+                String[] arrayStrNext = allNext.split(" ", 2);
+                if (arrayStrNext[0].equals("0") || arrayStrNext[1].equals("Pas_de_cours")) {
+                    nextMatiere.setText("!!!!!!");
+                    nextSalle.setText("Pas de cours");
+                } else {
+                    nextMatiere.setText(arrayStrNext[0]);
+                    nextSalle.setText(arrayStrNext[1]);
+                }
+
             }
         }
 

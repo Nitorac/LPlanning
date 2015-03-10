@@ -189,10 +189,9 @@ public static int currentDay(){
     return jourReturn;
 }
 
-public static String getFinalPlanning(){
+public static String getFinalPlanning(boolean next){
     int hour = currentSlotHour();
     int day = currentDay();
-   // Log.i("TRY", temp[0][8]);
     try {
     if(grClasse.equals("1")){
         if(semaine.equals("A")){
@@ -203,7 +202,7 @@ public static String getFinalPlanning(){
             String weekAfterLV2A [][] = LV2SA(weekAfterDNL);
             Log.i("LV2", weekAfterLV2A[0][6]);
             String [][] finalTab = grAng(weekAfterLV2A);
-            return finalTab[day][hour];
+            if(next) {return finalTab[day][hour + 1];}else{return finalTab[day][hour];}
         }else if(semaine.equals("B")){
             String [][] weekLatin = optLatin(weekBasicGr1B);
             Log.i("LATIN", weekLatin[0][4]);
@@ -212,7 +211,7 @@ public static String getFinalPlanning(){
             String weekAfterLV2B [][] = LV2SB(weekAfterDNL);
             Log.i("LV2", weekAfterLV2B[0][6]);
             String [][] finalTab = grAng(weekAfterLV2B);
-            return finalTab[day][hour];
+            if(next) {return finalTab[day][hour + 1];}else{return finalTab[day][hour];}
         }
     }else if(grClasse.equals("2")){
         if(semaine.equals("A")){
@@ -220,13 +219,13 @@ public static String getFinalPlanning(){
             String [] [] weekAfterDNL = optDNL(weekLatin);
             String weekAfterLV2A [][] = LV2SA(weekAfterDNL);
             String [][] finalTab = grAng(weekAfterLV2A);
-            return finalTab[day][hour];
+            if(next) {return finalTab[day][hour + 1];}else{return finalTab[day][hour];}
         }else if(semaine.equals("B")) {
             String[][] weekLatin = optLatin(weekBasicGr2B);
             String[][] weekAfterDNL = optDNL(weekLatin);
             String weekAfterLV2B[][] = LV2SB(weekAfterDNL);
             String [][] finalTab = grAng(weekAfterLV2B);
-            return finalTab[day][hour];
+            if(next) {return finalTab[day][hour + 1];}else{return finalTab[day][hour];}
         }
     }
         Log.i("FinalPlanningRt", "Day:" + String.valueOf(currentDay() + "Hour:" + currentSlotHour()));

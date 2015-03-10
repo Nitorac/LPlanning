@@ -48,4 +48,40 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cours d&apos;après :"
+        android:id="@+id/nextText"
+        android:layout_marginTop="130dp"
+        android:layout_below="@+id/matiere"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attendez ..."
+        android:id="@+id/nextSalle"
+        android:gravity="center"
+        android:textColor="#ff0800ff"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_alignTop="@+id/nextText"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attendez ..."
+        android:id="@+id/nextMatiere"
+        android:textSize="15sp"
+        android:textColor="#ff3d3d3d"
+        android:gravity="center"
+        android:layout_below="@+id/nextSalle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

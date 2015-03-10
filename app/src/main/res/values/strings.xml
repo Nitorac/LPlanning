@@ -47,4 +47,6 @@
     <string name="resetColorTxt">Réinitialiser le thème</string>
     <string name="resetColorTxtSub">Remettre le thème de base</string>
     <string name="changeColorMatiereSalleTxt">Changer la couleur de la matière</string>
+    <string name="add_event">Ajouter un évenement</string>
+    <string name="title_activity_add_event">AddEventActivity</string>
 </resources>

@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
@@ -81,6 +82,9 @@ public class SettingsActivity extends ActionBarActivity {
         android.support.v7.app.ActionBar ab =  getSupportActionBar();
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(getSavedActionBarColor()));
         ab.setBackgroundDrawable(colorDrawable);
+        ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+        ab.setIcon(R.drawable.ic_action_settings);
+        ab.setTitle("   " + getString(R.string.action_settings));
 
         String credits = getString(R.string.credits);
         String app_name = getString(R.string.app_name);

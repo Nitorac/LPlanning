@@ -1,6 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+
+    <item android:id="@+id/add_event"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_event"
+        android:title="@string/add_event"
+        android:onClick="addEvent">
+
+    </item>
     <item
         android:id="@+id/help_action"
         android:icon="@drawable/ic_action_settings"
@@ -8,4 +16,5 @@
         android:title="@string/action_settings"
         android:onClick="settingsClick">
     </item>
+
 </menu>
