@@ -50,14 +50,11 @@ public class AddEventActivity extends ActionBarActivity {
         contactBdd.open();
 
         Events events = new Events("Maths", "G16", "24", "10", "2014", 5);
+        Events events2 = new Events("Francais", "G15", "10", "15", "2015", 8);
         contactBdd.insertContact(events);
+        contactBdd.insertContact(events2);
 
-        Events eventsFromBdd = contactBdd.getFirstContactWithJour("24");
-
-        if (eventsFromBdd != null) {
-            Toast.makeText(this, eventsFromBdd.toString(), Toast.LENGTH_LONG)
-                    .show();
-      }
+        ArrayList<Events> allEvents = contactBdd.getAllRowsInArray();
 
         Map<String, String> map;
         items.clear();
@@ -65,9 +62,9 @@ public class AddEventActivity extends ActionBarActivity {
         map.put("line1", "Test");
         map.put("line2", "test" + " " + getSavedActionBarColor());
         items.add(map);
-        for(int i = 0; i <= sql.getRowsCount(); i++){
+        for(int i = 0; i < allEvents.size(); i++){
             map = new HashMap<>();
-            map.put("line1", eventsFromBdd.getMatiere());
+            map.put("line1", allEvents.get(i).getMatiere());
             map.put("line2", "LOL");
             items.add(map);
         }

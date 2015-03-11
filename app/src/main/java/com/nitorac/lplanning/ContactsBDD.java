@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+
 public class ContactsBDD {
 
     private static final int VERSION_BDD = 1;
-    private static final String NOM_BDD = "contacts.db";
+    private static final String NOM_BDD = "events.db";
 
     private static final String TABLE_EVENTS = "table_events";
     private static final String COL_ID = "ID";
@@ -125,6 +127,46 @@ public class ContactsBDD {
                 COL_SALLE, COL_JOUR, COL_MOIS, COL_ANNEE, COL_HORAIRE}, COL_JOUR + " LIKE \""
                 + numeroTelephone + "\"", null, null, null, null);
         return cursorToContact(c);
+    }
+
+
+        public ArrayList<Events> getAllRowsInArray() {
+
+            ArrayList<Events> list = new ArrayList<Events>();
+
+            // Select All Query
+            String selectQuery = "SELECT  * FROM " + TABLE_EVENTS;
+
+            SQLiteDatabase db = maBaseSQLite.getReadableDatabase();
+            try {
+
+                Cursor cursor = db.rawQuery(selectQuery, null);
+                try {
+
+                    // looping through all rows and adding to list
+                    if (cursor.moveToFirst()) {
+                        do {
+                            Events events = new Events();
+                            events.setId(cursor.getInt(NUM_COL_ID));
+                            events.setMatiere(cursor.getString(NUM_COL_MATIERE));
+                            events.setSalle(cursor.getString(NUM_COL_SALLE));
+                            events.setJour(cursor.getString(NUM_COL_JOUR));
+                            events.setMois(cursor.getString(NUM_COL_MOIS));
+                            events.setAnnee(cursor.getString(NUM_COL_ANNEE));
+                            events.setTranche_horaire(cursor.getInt(NUM_COL_HORAIRE));
+                            list.add(events);
+                        } while (cursor.moveToNext());
+                    }
+
+                } finally {
+                    try { cursor.close(); } catch (Exception ignore) {}
+                }
+
+            } finally {
+                try { db.close(); } catch (Exception ignore) {}
+            }
+
+            return list;
     }
 
     /**
