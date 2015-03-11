@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class MySQLiteDatabase extends SQLiteOpenHelper {
+public class NitoSQLiteDatabase extends SQLiteOpenHelper {
 
     private static final String TABLE_EVENTS = "table_events";
     private static final String COL_ID = "ID";
@@ -25,8 +25,8 @@ public class MySQLiteDatabase extends SQLiteOpenHelper {
             + COL_JOUR + " TEXT NOT NULL, " + COL_MOIS + " TEXT NOT NULL, "
             + COL_ANNEE + " TEXT NOT NULL, " + COL_HORAIRE + " INTEGER NOT NULL);";
 
-    public MySQLiteDatabase(Context context, String name, CursorFactory factory,
-                            int version) {
+    public NitoSQLiteDatabase(Context context, String name, CursorFactory factory,
+                              int version) {
         super(context, name, factory, version);
     }
 
@@ -45,6 +45,20 @@ public class MySQLiteDatabase extends SQLiteOpenHelper {
         // on supprime la table table_contacts de la BDD et on recrée la BDD
         db.execSQL("DROP TABLE " + TABLE_EVENTS + ";");
         onCreate(db);
+    }
+
+
+    public boolean isTableEventsExists() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+ TABLE_EVENTS +"'", null);
+        if(cursor!=null) {
+            if(cursor.getCount()>0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
     }
 
 

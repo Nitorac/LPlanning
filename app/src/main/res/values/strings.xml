@@ -49,4 +49,7 @@
     <string name="changeColorMatiereSalleTxt">Changer la couleur de la matière</string>
     <string name="add_event">Ajouter un évenement</string>
     <string name="title_activity_add_event">Exceptions</string>
+    <string name="action_add">Ajouter</string>
+    <string name="delete_event">Supprimer</string>
+    <string name="any_item">Aucune exception</string>
 </resources>

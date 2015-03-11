@@ -67,8 +67,9 @@
         android:textColor="#ff0800ff"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:layout_alignTop="@+id/nextText"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/nextText"
+        android:layout_toRightOf="@+id/nextText"
+        android:layout_toEndOf="@+id/nextText" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -81,7 +82,7 @@
         android:layout_below="@+id/nextSalle"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignRight="@+id/matiere"
+        android:layout_alignEnd="@+id/matiere" />
 
 </RelativeLayout>

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-public class ContactsBDD {
+public class EventsBDD {
 
     private static final int VERSION_BDD = 1;
     private static final String NOM_BDD = "events.db";
@@ -29,10 +29,10 @@ public class ContactsBDD {
     private static final int NUM_COL_HORAIRE = 6;
     private SQLiteDatabase bdd;
 
-    private MySQLiteDatabase maBaseSQLite;
+    private NitoSQLiteDatabase maBaseSQLite;
 
-    public ContactsBDD(Context context) {
-        maBaseSQLite = new MySQLiteDatabase(context, NOM_BDD, null, VERSION_BDD);
+    public EventsBDD(Context context) {
+        maBaseSQLite = new NitoSQLiteDatabase(context, NOM_BDD, null, VERSION_BDD);
     }
 
     public String getName(){
@@ -61,6 +61,10 @@ public class ContactsBDD {
         return bdd;
     }
 
+    public void recreateDB(){
+        maBaseSQLite.onCreate(bdd);
+    }
+
     /**
      * Insère un contact en base de données
      *
@@ -68,7 +72,7 @@ public class ContactsBDD {
      *            le contact à insérer
      * @return l'identifiant de la ligne insérée
      */
-    public long insertContact(Events events) {
+    public long insertEvent(Events events) {
         ContentValues values = new ContentValues();
         // On insère les valeurs dans le ContentValues : on n'ajoute pas
         // l'identifiant car il est créé automatiquement
@@ -91,7 +95,7 @@ public class ContactsBDD {
      *            le nouveau contact à associer à l'identifiant
      * @return le nombre de lignes modifiées
      */
-    public int updateContact(int id, Events events) {
+    public int updateEvent(int id, Events events) {
         ContentValues values = new ContentValues();
         values.put(COL_MATIERE, events.getMatiere());
         values.put(COL_SALLE, events.getSalle());
@@ -110,8 +114,12 @@ public class ContactsBDD {
      *            l'identifiant du contact à supprimer
      * @return le nombre de contacts supprimés
      */
-    public int removeContactWithID(int id) {
+    public int removeEventWithID(int id) {
         return bdd.delete(TABLE_EVENTS, COL_ID + " = " + id, null);
+    }
+
+    public void reset(){
+       bdd.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENTS);
     }
 
     /**
@@ -122,11 +130,11 @@ public class ContactsBDD {
      *            le numéro de téléphone
      * @return le contact récupéré depuis la base de données
      */
-    public Events getFirstContactWithJour(String numeroTelephone) {
+    public Events getFirstEventWithJour(String numeroTelephone) {
         Cursor c = bdd.query(TABLE_EVENTS, new String[] { COL_ID, COL_MATIERE,
                 COL_SALLE, COL_JOUR, COL_MOIS, COL_ANNEE, COL_HORAIRE}, COL_JOUR + " LIKE \""
                 + numeroTelephone + "\"", null, null, null, null);
-        return cursorToContact(c);
+        return cursorToEvent(c);
     }
 
 
@@ -169,6 +177,10 @@ public class ContactsBDD {
             return list;
     }
 
+    public boolean isTableEventsExists(){
+        return maBaseSQLite.isTableEventsExists();
+    }
+
     /**
      * Convertit le cursor en contact
      *
@@ -176,7 +188,7 @@ public class ContactsBDD {
      *            le cursor à convertir
      * @return le Contact créé à partir du Cursor
      */
-    private Events cursorToContact(Cursor c) {
+    private Events cursorToEvent(Cursor c) {
         // si aucun élément n'a été retourné dans la requête, on renvoie null
         if (c.getCount() == 0)
             return null;

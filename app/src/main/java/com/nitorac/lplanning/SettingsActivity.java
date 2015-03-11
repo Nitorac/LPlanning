@@ -417,6 +417,7 @@ public class SettingsActivity extends ActionBarActivity {
     public void onBackPressed(){
             super.onBackPressed();
             Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             finish();
             startActivity(intent);
     }

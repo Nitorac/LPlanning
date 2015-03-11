@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +33,10 @@ public class AddEventActivity extends ActionBarActivity {
     private static final String[] keys = { "line1", "line2" };
     private static final int[] controlIds = { android.R.id.text1, android.R.id.text2 };
 
+    private SimpleAdapter adapter;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
@@ -44,57 +47,50 @@ public class AddEventActivity extends ActionBarActivity {
         ab.setIcon(R.drawable.ic_action_event);
         ab.setTitle("   " + getString(R.string.title_activity_add_event));
 
-        ContactsBDD contactBdd = new ContactsBDD(this);
-        MySQLiteDatabase sql = new MySQLiteDatabase(this, contactBdd.getName(), null, contactBdd.getVersion());
+        final EventsBDD eventsBdd = new EventsBDD(this);
 
-        contactBdd.open();
+        eventsBdd.open();
 
-        Events events = new Events("Maths", "G16", "24", "10", "2014", 5);
-        Events events2 = new Events("Francais", "G15", "10", "15", "2015", 8);
-        contactBdd.insertContact(events);
-        contactBdd.insertContact(events2);
+        if(!eventsBdd.isTableEventsExists()){
+            eventsBdd.recreateDB();
+        }
 
-        ArrayList<Events> allEvents = contactBdd.getAllRowsInArray();
+        final ArrayList<Events> allEvents = eventsBdd.getAllRowsInArray();
 
         Map<String, String> map;
         items.clear();
-        map = new HashMap<>();
-        map.put("line1", "Test");
-        map.put("line2", "test" + " " + getSavedActionBarColor());
-        items.add(map);
         for(int i = 0; i < allEvents.size(); i++){
             map = new HashMap<>();
-            map.put("line1", allEvents.get(i).getMatiere());
-            map.put("line2", "LOL");
+            Events event = allEvents.get(i);
+            map.put("line1", event.getMatiere() + "  " + event.getSalle());
+            map.put("line2", "Le " + event.getJour() + "/" + event.getMois() + "/" + event.getAnnee());
             items.add(map);
         }
-        ListAdapter adapter = new SimpleAdapter(this,items,android.R.layout.simple_list_item_2,keys,controlIds );
-        ListView listView = (ListView) findViewById(R.id.listViewDB);
+        adapter = new SimpleAdapter(this,items,android.R.layout.simple_list_item_2,keys,controlIds );
+        final ListView listView = (ListView) findViewById(R.id.listViewDB);
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                if(position == 0){
-                }
-                else if(position == 1){
-                }
-                else if(position == 2){
-                }
-                else if(position == 3){
-                }
-                else if(position == 4){
-                }
-                else if(position == 5){
-                }
-                else if(position == 6){
-                }
-                else if(position == 7){
+                for(int i = 0; i < allEvents.size(); i++){
+                    if(position == i) {
+                        eventsBdd.open();
+                        Log.i("Position", String.valueOf(position));
+                        Log.i("Item ID", String.valueOf(allEvents.get(i).getId()));
+                        eventsBdd.removeEventWithID(allEvents.get(i).getId());
+                        eventsBdd.close();
+                        Intent intent = new Intent(AddEventActivity.this, AddEventActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        finish();
+                        startActivity(intent);
+                    }
                 }
             }
         });
 
-        contactBdd.close();
+        eventsBdd.close();
+        TextView any_item = (TextView) findViewById(R.id.any_item_txtView);
+        if(listView.getCount() == 0){ any_item.setVisibility(View.VISIBLE); }else{ any_item.setVisibility(View.INVISIBLE);}
     }
 
 
@@ -110,6 +106,31 @@ public class AddEventActivity extends ActionBarActivity {
         }
     }
 
+    public void addEvent(MenuItem mi){
+        final EventsBDD eventsBdd = new EventsBDD(this);
+        eventsBdd.open();
+        Events events = new Events("Maths", "G16", "24", "10", "2014", 5);
+        Events events2 = new Events("Francais", "G15", "10", "15", "2015", 8);
+        Events events3 = new Events("Physiques", "G15", "10", "15", "2015", 8);
+        Events events4 = new Events("Test", "G15", "10", "15", "2015", 8);
+        eventsBdd.insertEvent(events);
+        eventsBdd.insertEvent(events2);
+        eventsBdd.insertEvent(events3);
+        eventsBdd.insertEvent(events4);
+        eventsBdd.close();
+    }
+
+    public void deleteEvent(MenuItem mi){
+        EventsBDD eventsBdd = new EventsBDD(this);
+        eventsBdd.open();
+        eventsBdd.reset();
+        eventsBdd.recreateDB();
+        eventsBdd.close();
+        Intent intent = new Intent(this, this.getClass());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
