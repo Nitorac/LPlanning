@@ -123,8 +123,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void addEvent(MenuItem mi){
-        Toast.makeText(this, "Coucou", Toast.LENGTH_SHORT).show();
-
+        Intent intent = new Intent(MainActivity.this, AddEventActivity.class);
+        finish();
+        startActivity(intent);
     }
 
     public String getSavedActionBarColor(){
