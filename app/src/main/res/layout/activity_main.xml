@@ -68,8 +68,7 @@
         android:textSize="30dp"
         android:textStyle="bold"
         android:layout_below="@+id/nextText"
-        android:layout_toRightOf="@+id/nextText"
-        android:layout_toEndOf="@+id/nextText" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"

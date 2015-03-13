@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">LPlanning</string>
-    <string name="versionName">1.7</string>
+    <string name="versionName">1.8</string>
     <string name="action_settings">Paramètres</string>
     <string name="next" >Suivant : </string>
     <string name="grClassSpinner">Choisissez le groupe de classe :</string>
@@ -52,4 +52,7 @@
     <string name="action_add">Ajouter</string>
     <string name="delete_event">Supprimer</string>
     <string name="any_item">Aucune exception</string>
+    <string name="add_date">Entrez la date :</string>
+    <string name="add_event_ok">Valider</string>
+    <string name="enter_horaire">Entrez l\'horaire</string>
 </resources>
