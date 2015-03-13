@@ -10,15 +10,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -35,14 +34,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 
 public class AddEventActivity extends ActionBarActivity {
 
     private static final String APP_SHARED_PREFS_COLOR = "LplanningColor";
-    private SharedPreferences.Editor editor;
 
     private static final List<Map<String,String>> items = new ArrayList<>();
     private static final String[] keys = { "line1", "line2" };
@@ -51,16 +48,9 @@ public class AddEventActivity extends ActionBarActivity {
     private final EventsBDD eventsBdd = new EventsBDD(this);
 
     private DatePickerDialog datePickerDialog;
-    private SimpleDateFormat dateFormat;
 
     private Button horairePicker;
-    private Button supprBtn;
     private Button datePickerBtn;
-
-    private String finalValuePicker = "ERROR";
-
-
-    private SimpleAdapter adapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -92,7 +82,7 @@ public class AddEventActivity extends ActionBarActivity {
             getHoraire(event.getTranche_horaire(), event.getAnnee(), event.getMois(), event.getJour()));
             items.add(map);
         }
-        adapter = new SimpleAdapter(this,items,android.R.layout.simple_list_item_2,keys,controlIds );
+        SimpleAdapter adapter = new SimpleAdapter(this, items, android.R.layout.simple_list_item_2, keys, controlIds);
         final ListView listView = (ListView) findViewById(R.id.listViewDB);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -129,11 +119,7 @@ public class AddEventActivity extends ActionBarActivity {
         String text = datePickerBtn.getText().toString();
         String[] temp = text.split("/");
         Log.i("getMercredi()","Annee et mois et jour :" + temp[2] + " " + temp[1] + " " + temp[2]);
-        if(getWeekDay(temp[2], temp[1], temp[0]).equals("mercredi")){
-            return true;
-        }else{
-            return false;
-        }
+        return getWeekDay(temp[2], temp[1], temp[0]).equals("mercredi");
     }
 
     public int getHoraireInt(String horaireStr){
@@ -161,7 +147,7 @@ public class AddEventActivity extends ActionBarActivity {
             return 255;
         }
     }
-
+    @SuppressLint("InflateParams")
     public void createHoraireDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -193,7 +179,6 @@ public class AddEventActivity extends ActionBarActivity {
         builder.setPositiveButton("Appliquer", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finalValuePicker = arrayString[numberPicker.getValue()];
                 horairePicker.setText(arrayString[numberPicker.getValue()]);
             }
 
@@ -239,7 +224,7 @@ public class AddEventActivity extends ActionBarActivity {
         Dialog finalDialog = builder.create();
         finalDialog.show();
     }
-
+    @SuppressLint("InflateParams")
     public void modifierAddEventDialog(final String salle,final String matiere,final String date,final int horaire,final int id){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -250,20 +235,17 @@ public class AddEventActivity extends ActionBarActivity {
         builder.setTitle("Modifier un événement");
         builder.setCancelable(false);
 
-        dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
-
         datePickerBtn = (Button) dialogView.findViewById(R.id.dateBtn);
         final EditText matiereEditText = (EditText) dialogView.findViewById(R.id.matiereEditText);
         final EditText salleEditText = (EditText) dialogView.findViewById(R.id.salleEditText);
         horairePicker = (Button) dialogView.findViewById(R.id.horaireBtn);
-        supprBtn = (Button) dialogView.findViewById(R.id.supprBtn);
 
         String[] dateSplit = date.split("/");
 
         salleEditText.setText(salle);
         matiereEditText.setText(matiere);
         datePickerBtn.setText(date);
-        horairePicker.setText(getHoraireMaj(horaire,dateSplit[2], dateSplit[1], dateSplit[0]));
+        horairePicker.setText(getHoraireMaj(horaire, dateSplit[2], dateSplit[1], dateSplit[0]));
 
         horairePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -353,7 +335,7 @@ public class AddEventActivity extends ActionBarActivity {
             }
         });
     }
-
+    @SuppressLint("InflateParams")
     public void createAddEventDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -362,8 +344,6 @@ public class AddEventActivity extends ActionBarActivity {
         builder.setIcon(R.drawable.ic_add);
         builder.setTitle("Ajouter un événement");
         builder.setCancelable(false);
-
-        dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE);
 
         datePickerBtn = (Button) dialogView.findViewById(R.id.dateBtn);
         final EditText matiereEditText = (EditText) dialogView.findViewById(R.id.matiereEditText);
@@ -456,7 +436,7 @@ public class AddEventActivity extends ActionBarActivity {
 
     public String getSavedActionBarColor(){
         SharedPreferences color = getSharedPreferences(APP_SHARED_PREFS_COLOR, Activity.MODE_PRIVATE);
-        editor = color.edit();
+        SharedPreferences.Editor editor = color.edit();
         if(color.getString("actionBarColor", "#428AC9").equals("#428AC9")){
             editor.putString("actionBarColor", "#428AC9");
             editor.commit();
